@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const User = require('../models/user/index');
 const bcrypt = require('bcrypt');
-const {jwt} = require('../helpers/jwt');
+const jwt = require('../helpers/jwt');
 const checkAuth = require('../middlewares/validator/checkAuth');
 
 router

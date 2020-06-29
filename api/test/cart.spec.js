@@ -1,25 +1,21 @@
 require('./config/test');
 
-const app = require('../app');
-
 var auth = require('./dummy/auth');
 const product = require('./dummy/product');
 const {data, methods, success, fail} = require('./dummy/cart');
 const { chai, chaihttp, expect, app, clearDB, mongoose } = require('../helpers/databasetest');
 mongoose.set('useFindAndModify', false);
 
-chai.use(require('chai-http'));
-
 describe('routes Carts', function () {
 
   chai.use(chaihttp)
   before(function (done) { clearDB(done) });
-  after(function (done) { clearDB(done) });
+  // after(function (done) { clearDB(done) });
 
   describe('Success', function () {
     auth
       .methods
-      .login(app, chai, auth.data.seller, (err, res, done) => {
+      .register(app, chai, auth.data.seller, (err, res, done) => {
         auth.data.seller['id'] = res.body.id;
         auth.data.seller['token'] = res.body.token;
         done();

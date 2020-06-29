@@ -8,7 +8,11 @@ const chai = require('chai'),
 module.exports = {
     chai, chaihttp, should, app, mongoose,
     clearDB(done) {
-        mongoose.connect(`mongodb://localhost:27017/${test}`, { useNewUrlParser: true }, function () {
+        mongoose.connect(`mongodb://localhost:27017/${test}`, {
+          // useUnifiedTopology: true,
+          useNewUrlParser: true 
+        },
+        function () {
             mongoose.connection.db.dropDatabase();
             done();
         })

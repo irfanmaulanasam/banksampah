@@ -1,19 +1,14 @@
 require('./config/test');
 
-const app = require('../app');
-const chai = require('chai');
-const drop = require('../helpers/drop');
 const {data, methods, success, fail} = require('./dummy/auth');
-
-const {expect} = chai;
-
-chai.use(require('chai-http'));
+const { chai, chaihttp, expect, app, clearDB, mongoose } = require('../helpers/databasetest');
+mongoose.set('useFindAndModify', false);
 
 describe('routes Auth', function () {
 
-  before(function () {
-    drop.collection('user')
-  });
+  chai.use(chaihttp)
+  before(function (done) { clearDB(done) });
+  // after(function (done) { clearDB(done) });
 
   describe('Success', function () {
     methods.register(app, chai, {
@@ -55,11 +50,10 @@ describe('routes Auth', function () {
             password: data.seller.password
           })
           .end(function (err, res) {
-            console.log(res.body);
             expect(res).have.status(422);
             expect(res).to.be.a('object');
             expect(res.body.message.errors).to.have.all.keys('email', 'username');
-            done();
+            // done();
           })
       });
     });
@@ -71,11 +65,11 @@ describe('routes Auth', function () {
           .post('/auth/login')
           .send({user: data.seller.username, password: data.seller.password + Math.random()})
           .end(function (err, res) {
-            console.log(res.body);
+            // console.log(res.status,res.body)
             expect(res).have.status(400);
             expect(res.body).to.have.property('message');
             expect(res.body.message).to.equal('Username/Email/Password Invalid');
-            done();
+            // done();
           })
       });
 
@@ -85,12 +79,12 @@ describe('routes Auth', function () {
           .post('/auth/login')
           .send({password: data.seller.password})
           .end(function (err, res) {
-            console.log(res.body);
+            // console.log(res.body);
             expect(res).have.status(422);
             expect(res.body).to.have.property('message');
             expect(res.body.message.errors).to.have.property('user');
             expect(res.body.message.errors.user.message).to.equal('User is required');
-            done();
+            // done();
           })
       });
 
@@ -100,7 +94,7 @@ describe('routes Auth', function () {
           .post('/auth/login')
           .send({user: data.seller.username})
           .end(function (err, res) {
-            console.log(res.body);
+            // console.log(res.body);
             expect(res).have.status(422);
             expect(res.body).to.have.property('message');
             expect(res.body.message.errors).to.have.property('password');

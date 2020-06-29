@@ -1,22 +1,16 @@
 require('./config/test');
 
-const app = require('../app');
-const chai = require('chai');
 const fs = require('fs');
-
-const drop = require('../helpers/drop');
 var auth = require('./dummy/auth');
 const {data, methods, success, fail} = require('./dummy/product');
-
-const {expect} = chai;
-
-chai.use(require('chai-http'));
+const { chai, chaihttp, expect, app, clearDB, mongoose } = require('../helpers/databasetest');
+mongoose.set('useFindAndModify', false);
 
 describe('routes Products', function () {
 
-  before(function () {
-    drop.collection('product')
-  });
+  chai.use(chaihttp)
+  before(function (done) { clearDB(done) });
+  after(function (done) { clearDB(done) });
 
   describe('Success', function () {
     auth
